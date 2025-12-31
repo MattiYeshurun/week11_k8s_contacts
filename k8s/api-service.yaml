@@ -1,10 +1,14 @@
-API version: v1
-Kind: Service
-Metadata:
-  Name: api-service
-Service specifications:
-Selector: app: api (matches the Pod label)
-Port: 8000
-Target port: 8000
-Node port: 30080 (external access port)
-Type: NodePort (allows external access)
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+  labels:
+    app: api
+spec:
+  selector: 
+    app: api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30080
+  type: NodePort

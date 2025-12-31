@@ -3,7 +3,6 @@ from typing import Optional
 from bson import ObjectId
 from pydantic import BaseModel
 from pymongo import MongoClient
-from pymongo.errors import ConnectionFailure
 
 class Contact(BaseModel):
     id: Optional[str] = None
@@ -21,13 +20,14 @@ class Contact(BaseModel):
 
 class DataIntractor:
     def __init__(self):
-        host = os.getenv("DB_HOST", "localhost")
-        port = os.getenv("DB_PORT", "27017")
-        db_name = os.getenv("DB_NAME", "contactsdb")
+        host = os.getenv("MONGO_HOST", "localhost")
+        port = os.getenv("MONGO_PORT", "27017")
+        db_name = os.getenv("MONGO_NAME", "contactsdb")
     
-        self.client = MongoClient("mongodb://localhost:27017/", serverSelectionTimeoutMS=5000)
+        self.client = MongoClient(f"mongodb://{host}:{port}/", serverSelectionTimeoutMS=5000)
         self.db = self.client["contact_data"]
         self.collection = self.db["contacts"]
+        self.collection.create_index("phone_number", unique=True)
         print("✓ Successfully connected to MongoDB!")
 
     def create_contact(self, contact_data: dict):
@@ -63,5 +63,4 @@ class DataIntractor:
         except:
             return False
 
-# DataIntractor.get_all_contacts()
 

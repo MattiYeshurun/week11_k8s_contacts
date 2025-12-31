@@ -13,8 +13,11 @@ def read_contacts():
 
 @app.post("/contacts")
 def create_contact(contact: Contact):
-    new_id = db.create_contact(contact.to_dict())
-    return {"message": "Contact created successfully", "id": str(new_id)}
+    try:
+        new_id = db.create_contact(contact.to_dict())
+        return {"message": "Contact created successfully", "id": str(new_id)}
+    except:
+        return {"message": "Contact not created!"}
 
 @app.put("/contacts/{id}")
 def update_contact(id: str, contact: Contact):
